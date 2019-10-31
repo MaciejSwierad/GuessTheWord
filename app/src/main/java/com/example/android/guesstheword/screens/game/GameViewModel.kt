@@ -18,12 +18,16 @@ class GameViewModel : ViewModel() {
         //This is the number of milliseconds in a second
         private const val ONE_SECOND = 1000L
 
-        //This is the total time of the game
+        //This is the total currentTime of the game
         private const val COUNTDOWN_TIME = 10000L
 
     }
 
     private val timer: CountDownTimer
+
+    private val _currentTime = MutableLiveData<Long>()
+    val currentTime : LiveData<Long>
+        get() = _currentTime
 
     // The current word
     private val _word = MutableLiveData<String>()
@@ -48,22 +52,26 @@ class GameViewModel : ViewModel() {
 
         _score.value = 0
         _eventGameFinish.value = false
+        _currentTime.value = COUNTDOWN_TIME/1000
 
         resetList()
         nextWord()
 
         timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND){
 
-            override fun onTick(p0: Long) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun onTick(millisUntilFinished: Long) {
+                _currentTime.value = millisUntilFinished / ONE_SECOND
+                //DateUtils.formatElapsedTime(_currentTime.value?:0)
             }
 
             override fun onFinish() {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                _currentTime.value = DONE
+                _eventGameFinish.value = true
             }
         }
+        timer.start()
 
-        //DateUtils.formatElapsedTime()
+
     }
 
 
@@ -127,6 +135,7 @@ class GameViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
+        timer.cancel()
         Log.i("GameViewModel", "GameViewModel destroyed!")
     }
 
