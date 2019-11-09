@@ -37,7 +37,7 @@ class GameViewModel : ViewModel() {
         private const val COUNTDOWN_TIME = 10000L
 
         //This is the time when COUNTDOWN_PANIC buzzing starts
-        private const val PANIC_BUZZ_TIME = COUNTDOWN_TIME - 7000L
+        private const val PANIC_BUZZ_TIME = 3000L
 
     }
 
@@ -47,9 +47,9 @@ class GameViewModel : ViewModel() {
     val currentTime : LiveData<Long>
         get() = _currentTime
 
-    val currentTimeString = Transformations.map(currentTime, {time ->
+    val currentTimeString = Transformations.map(currentTime) { time ->
         DateUtils.formatElapsedTime(time)
-    })
+    }
 
     // The current word
     private val _word = MutableLiveData<String>()
@@ -89,7 +89,8 @@ class GameViewModel : ViewModel() {
 
             override fun onTick(millisUntilFinished: Long) {
                 _currentTime.value = millisUntilFinished / ONE_SECOND
-                if(currentTime.value!! < PANIC_BUZZ_TIME/1000)
+                //if(currentTime.value!! < PANIC_BUZZ_TIME/1000)
+                if(millisUntilFinished < PANIC_BUZZ_TIME)
                 {
                     _eventBuzz.value = BuzzType.COUNTDOWN_PANIC
                 }
@@ -153,7 +154,6 @@ class GameViewModel : ViewModel() {
     /** Methods for buttons presses **/
 
     fun onSkip() {
-        _eventBuzz.value = BuzzType.COUNTDOWN_PANIC
         _score.value = (score.value)?.minus(1)
         nextWord()
     }
