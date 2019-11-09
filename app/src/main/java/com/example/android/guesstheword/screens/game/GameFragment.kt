@@ -55,25 +55,28 @@ class GameFragment : Fragment() {
                 false
         )
 
-        binding.correctButton.setOnClickListener {
-            viewModel.onCorrect()
-        }
+        binding.gameViewModel = viewModel
+        binding.setLifecycleOwner(this)
 
-        binding.skipButton.setOnClickListener {
-            viewModel.onSkip()
-        }
+//        binding.correctButton.setOnClickListener {
+//            viewModel.onCorrect()
+//        }
+//
+//        binding.skipButton.setOnClickListener {
+//            viewModel.onSkip()
+//        }
 
-        viewModel.currentTime.observe(this, Observer { newTime ->
-            binding.timerText.text = DateUtils.formatElapsedTime(newTime)
-        })
+//        viewModel.currentTime.observe(this, Observer { newTime ->
+//            binding.timerText.text = DateUtils.formatElapsedTime(newTime)
+//        })
 
-        viewModel.score.observe(this, Observer { newScore ->
-            binding.scoreText.text = newScore.toString()
-        })
-
-        viewModel.word.observe(this, Observer { newWord ->
-            binding.wordText.text = newWord
-        })
+//        viewModel.score.observe(this, Observer { newScore ->
+//            binding.scoreText.text = newScore.toString()
+//        })
+//
+//        viewModel.word.observe(this, Observer { newWord ->
+//            binding.wordText.text = newWord
+//        })
 
         viewModel.eventGameFinish.observe(this, Observer { hasFinished ->
             if (hasFinished)
