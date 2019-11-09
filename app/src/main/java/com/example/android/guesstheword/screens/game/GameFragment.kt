@@ -91,6 +91,11 @@ class GameFragment : Fragment() {
         })
 
 
+        viewModel.eventBuzz.observe(this, Observer { eventType ->
+            if (eventType != GameViewModel.BuzzType.NO_BUZZ)
+                buzz(eventType.pattern)
+        })
+
         return binding.root
 
     }
@@ -112,6 +117,7 @@ class GameFragment : Fragment() {
         buzzer?.let {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 buzzer.vibrate(VibrationEffect.createWaveform(pattern, -1))
+                Log.i("GameFragment", "buzzing $pattern")
             } else {
                 //deprecated in API 26
                 buzzer.vibrate(pattern, -1)
